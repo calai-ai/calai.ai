@@ -1,29 +1,35 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function Home() {
-  const [message, setMessage] = useState('');
-  const [response, setResponse] = useState('');
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
 
-  const handleSend = async () => {
-    setResponse('Calai denkt na...');
-    const res = await fetch('/api/coach', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+  async function sendMessage() {
+    setResponse("Calai denkt na...");
+    const res = await fetch("/api/coach", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
     });
-    const data = await res.text();
-    setResponse(data);
-  };
+    const data = await res.json();
+    setResponse(data.response);
+  }
 
   return (
-    <main style={{ fontFamily: 'sans-serif', padding: '2rem', maxWidth: '600px', margin: 'auto' }}>
-      <h1>🧘 Welkom bij Calai</h1>
-      <p>Stel je vraag aan jouw AI-coach:</p>
+    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h1>🤸 Welkom bij Calai</h1>
       <textarea
-        value={message}
-        onChange={e => setMessage(e.target.value)}
         rows={4}
-        style={{ width: '100%', padding: '1rem', marginTop: '1rem', fontSize: '1rem' }}
-        placeholder="Waar wil je vandaag bij stilstaan?"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Waar wil je bij stilstaan vandaag?"
+        style={{ width: "100%", padding: "1rem", fontSize: "1rem" }}
       />
-      <button onClick={handleSend} style={{ width: '100%', padding: '1rem', marginTop: '1
+      <br />
+      <button onClick={sendMessage} style={{ marginTop: "1rem" }}>
+        Stuur naar Calai
+      </button>
+      <p style={{ marginTop: "1rem" }}>{response}</p>
+    </main>
+  );
+}

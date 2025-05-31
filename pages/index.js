@@ -1,26 +1,58 @@
+import { useState } from "react";
+
 export default function Home() {
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async () => {
+    setLoading(true);
+    const res = await fetch("/api/coach", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await res.json();
+    setResponse(data.reply);
+    setLoading(false);
+  };
+
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>👋 Welkom bij Calai</h1>
-      <p>Stel je vraag aan jouw AI-coach:</p>
+      <p>Waar wil je vandaag bij stilstaan?</p>
       <textarea
         rows="4"
-        style={{ width: '100%', padding: '1rem', marginTop: '1rem' }}
-        placeholder="Waar wil je vandaag bij stilstaan?"
+        style={{ width: "100%", padding: "1rem", marginTop: "1rem" }}
+        placeholder="Typ hier je gedachte..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
       <button
         style={{
-          marginTop: '1rem',
-          padding: '1rem',
-          backgroundColor: '#0070f3',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer'
+          marginTop: "1rem",
+          padding: "1rem",
+          backgroundColor: "#0070f3",
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          cursor: "pointer"
         }}
+        onClick={handleSend}
+        disabled={loading}
       >
-        Stuur naar Calai
+        {loading ? "Calai denkt..." : "Stuur naar Calai"}
       </button>
+
+      {response && (
+        <div style={{ marginTop: "2rem", background: "#f0f0f0", padding: "1rem" }}>
+          <strong>Antwoord van Calai:</strong>
+          <p>{response}</p>
+        </div>
+      )}
     </div>
   );
 }

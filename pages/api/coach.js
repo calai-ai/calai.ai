@@ -25,7 +25,11 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-
+    if (!res.ok) {
+  setResponse("Er ging iets mis: " + data.error);
+  setLoading(false);
+  return;
+}
     if (response.ok) {
       res.status(200).json({ reply: data.choices[0].message.content });
     } else {

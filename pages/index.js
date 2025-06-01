@@ -8,7 +8,7 @@ export default function Home() {
 
   const handleSend = async () => {
     setLoading(true);
-    setError(""); // reset foutmelding
+    setError(""); // reset fout
     try {
       const res = await fetch("/api/coach", {
         method: "POST",
@@ -36,6 +36,7 @@ export default function Home() {
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>👋 Welkom bij Calai</h1>
       <p>Waar wil je vandaag bij stilstaan?</p>
+
       <textarea
         rows="4"
         style={{ width: "100%", padding: "1rem", marginTop: "1rem" }}
@@ -43,6 +44,7 @@ export default function Home() {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
+
       <button
         style={{
           marginTop: "1rem",

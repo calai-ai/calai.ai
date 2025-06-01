@@ -4,33 +4,32 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSend = async () => {
     setLoading(true);
-
+    setError(""); // reset foutmelding
     try {
       const res = await fetch("/api/coach", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message }),
       });
 
       const data = await res.json();
-      console.log("Server response:", data); // <- JUISTE PLEK
 
       if (!res.ok) {
-        setResponse("Er ging iets mis: " + data.error);
-      } else {
-        setResponse(data.reply);
+        throw new Error(data.error || "Er ging iets mis");
       }
 
-    } catch (error) {
-      setResponse("Er ging iets mis: " + error.message);
+      setResponse(data.reply);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -52,7 +51,7 @@ export default function Home() {
           color: "white",
           border: "none",
           borderRadius: "8px",
-          cursor: "pointer"
+          cursor: "pointer",
         }}
         onClick={handleSend}
         disabled={loading}
@@ -60,8 +59,21 @@ export default function Home() {
         {loading ? "Calai denkt..." : "Stuur naar Calai"}
       </button>
 
+      {error && (
+        <div style={{ marginTop: "2rem", color: "red" }}>
+          <strong>Er ging iets mis:</strong> {error}
+        </div>
+      )}
+
       {response && (
-        <div style={{ marginTop: "2rem", background: "#f0f0f0", padding: "1rem" }}>
+        <div
+          style={{
+            marginTop: "2rem",
+            background: "#f0f0f0",
+            padding: "1rem",
+            borderRadius: "8px",
+          }}
+        >
           <strong>Antwoord van Calai:</strong>
           <p>{response}</p>
         </div>

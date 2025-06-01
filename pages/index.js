@@ -7,19 +7,32 @@ export default function Home() {
 
   const handleSend = async () => {
     setLoading(true);
-    const res = await fetch("/api/coach", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
 
-    const data = await res.json();
-    setResponse(data.reply);
+    try {
+      const res = await fetch("/api/coach", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      console.log("Server response:", data); // <- JUISTE PLEK
+
+      if (!res.ok) {
+        setResponse("Er ging iets mis: " + data.error);
+      } else {
+        setResponse(data.reply);
+      }
+
+    } catch (error) {
+      setResponse("Er ging iets mis: " + error.message);
+    }
+
     setLoading(false);
   };
-console.log("Server response:", data);
+
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>👋 Welkom bij Calai</h1>

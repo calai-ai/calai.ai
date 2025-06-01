@@ -19,7 +19,7 @@ export default function Home() {
     setResponse(data.reply);
     setLoading(false);
   };
-
+console.log("Server response:", data);
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>👋 Welkom bij Calai</h1>

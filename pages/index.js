@@ -8,7 +8,9 @@ export default function Home() {
 
   const handleSend = async () => {
     setLoading(true);
-    setError(""); // reset fout
+    setError("");
+    setResponse(""); // Reset vorige response
+
     try {
       const res = await fetch("/api/coach", {
         method: "POST",
@@ -21,12 +23,12 @@ export default function Home() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Er ging iets mis");
+        throw new Error(data.error || "Onbekende fout");
       }
 
       setResponse(data.reply);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Er ging iets mis");
     } finally {
       setLoading(false);
     }
